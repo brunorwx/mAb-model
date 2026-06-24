@@ -38,3 +38,8 @@ curl -X POST http://localhost:8000/predict \
 - The current Dockerfile installs the Python dependencies listed in `pyproject.toml`.
 - The architecture document at `docs/ARCHITECTURE.md` describes the intended
   ML pipeline and inference service design.
+- Feel free to use in-IDE test runner or `pytest` to run the unit tests in `tests/`. e.g.,
+
+```bash
+pytest tests/test_preprocessing.py
+```
