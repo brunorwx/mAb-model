@@ -64,7 +64,8 @@ def apply_scaler(X: pd.DataFrame, scaler: StandardScaler) -> pd.DataFrame:
     return pd.DataFrame(arr, columns=X.columns, index=X.index)
 
 
-def build_train_pipeline(out_dir: Path = DATA_DIR):
+def build_train_pipeline() -> tuple[pd.DataFrame, pd.Series, StandardScaler]:
+
     train_data, train_targets, _ = load_data()
     train_data = forward_fill_z_cols(train_data)
     X = aggregate_experiment_features(train_data)
@@ -83,9 +84,7 @@ def build_train_pipeline(out_dir: Path = DATA_DIR):
     return X_scaled, y, scaler
 
 
-def build_test_pipeline(
-    scaler: StandardScaler, save_processed: bool = False, out_dir: Path = DATA_DIR
-):
+def build_test_pipeline(scaler: StandardScaler) -> pd.DataFrame:
     _, _, test_data = load_data()
     test_data = forward_fill_z_cols(test_data)
     X_test = aggregate_experiment_features(test_data).set_index("Exp")
@@ -98,4 +97,4 @@ if __name__ == "__main__":
     X, y, scaler = build_train_pipeline()
     X_test = build_test_pipeline(scaler)
 
-    print("Processed train/test saved to data/")
+    print("Saved scaler to src/artifacts/")
