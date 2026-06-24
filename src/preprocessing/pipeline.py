@@ -77,7 +77,7 @@ def build_train_pipeline(out_dir: Path = DATA_DIR):
     scaler = fit_scaler(X)
     X_scaled = apply_scaler(X, scaler)
 
-        with open(out_dir / "artifacts/scaler.pkl", "wb") as f:
+    with open("src/artifacts/scaler.pkl", "wb") as f:
             pickle.dump(scaler, f)
 
     return X_scaled, y, scaler
