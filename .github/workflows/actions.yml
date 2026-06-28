@@ -1,23 +1,30 @@
 name: mAb model
 on:
   push:
-    branches: [ "main" ]
+    branches: [main]
   pull_request:
-    branches: [ "main" ]
+    branches: [main]
 permissions:
   contents: read
 jobs:
   code-quality:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [3.13]
     steps:
-    - uses: actions/checkout@v4
-    - name: Install uv
-      uses: astral-sh/setup-uv@v5
-      with:
-        python-version: "3.13"
-    - name: Install dependencies
-      run: uv sync --all-extras && uv run python -m pip install -e .
-    - name: Lint with ruff
-      run: uv run ruff check .
-    - name: Test with pytest
-      run: uv run pytest
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install uv and sync dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install uv
+          uv sync --all-extras
+          uv run python -m pip install -e .
+      - name: Lint with ruff
+        run: uv run ruff check .
+      - name: Test with pytest
+        run: uv run pytest
