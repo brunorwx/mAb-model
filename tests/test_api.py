@@ -2,7 +2,7 @@ import pickle
 from pathlib import Path
 
 import numpy as np
-from fastapi.testclient import TestClient
+from httpx2 import ASGITransport, Client
 from sklearn.linear_model import LinearRegression
 from sklearn.preprocessing import StandardScaler
 
@@ -38,7 +38,8 @@ def _build_test_artifacts(tmp_path: Path) -> tuple[Path, Path]:
 
 
 def test_api_health_endpoint():
-    client = TestClient(app)
+    transport = ASGITransport(app=app)
+    client = Client(transport=transport)
 
     response = client.get("/health")
 
@@ -51,7 +52,8 @@ def test_api_predict_endpoint(tmp_path: Path):
 
     prediction_module.set_artifact_paths(preprocessor_path, model_path)
 
-    with TestClient(app) as client:
+    transport = ASGITransport(app=app)
+    with Client(transport=transport) as client:
         response = client.post(
             "/predict",
             json={
