@@ -20,4 +20,4 @@ jobs:
     - name: Lint with ruff
       run: uv run ruff check .
     - name: Test with pytest
-      run: uv run pytest
+      run: uv run pytest --pythonpath=src
