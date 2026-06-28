@@ -16,8 +16,8 @@ jobs:
       with:
         python-version: "3.13"
     - name: Install dependencies
-      run: uv sync --all-extras
+      run: uv sync --all-extras && uv pip install -e .
     - name: Lint with ruff
       run: uv run ruff check .
     - name: Test with pytest
-      run: uv run pytest --pythonpath=src
+      run: uv run pytest
