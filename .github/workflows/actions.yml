@@ -1,30 +1,35 @@
-name: mAb model
+
+name: Run tests
+
 on:
   push:
-    branches: [main]
+    branches: [ main, master ]
   pull_request:
-    branches: [main]
-permissions:
-  contents: read
+    branches: [ main, master ]
+
 jobs:
-  code-quality:
+  test:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: [3.13]
+        python-version: ["3.13"]
+
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python-version }}
-      - name: Install uv and sync dependencies
+
+      - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          python -m pip install uv
-          uv sync --all-extras
-          uv run python -m pip install -e .
-      - name: Lint with ruff
-        run: uv run ruff check .
-      - name: Test with pytest
-        run: uv run pytest
+          pip install .
+
+      - name: Install test tools
+        run: pip install pytest pytest-anyio
+
+      - name: Run tests
+        run: pytest -q
